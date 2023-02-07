@@ -11,13 +11,23 @@
 //These lines above and below are the exact same.
 //------------------
 
-const Pet = (props) => {
+const Pet = (prop) => {
+  let hero = "http://pets-images.dev-apis.com/pets/none.jpg";
+  if (prop.images.length) {
+    hero = prop.images[0];
+  }
   return (
-    <div>
-      <h1>{props.name}</h1>
-      <h1>{props.animal}</h1>
-      <h1>{props.breed}</h1>
-    </div>
+    <a href={`/details/${prop.id}`} className="pet">
+      <div className="image-container">
+        <img src={hero} alt={prop.name} />
+      </div>
+      <div className="info">
+        <h1>{prop.name}</h1>
+        <h2>
+          {prop.animal} - {prop.breed} - {prop.location}
+        </h2>
+      </div>
+    </a>
   );
 };
 //default is how modules "work"

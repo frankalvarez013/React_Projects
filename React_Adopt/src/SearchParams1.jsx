@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
-import Results from "./Results";
-import useBreedList from "./useBreedList";
+import Pet from "./Pet";
 const ANIMALS = ["bird", "cat", "dog", "rabbit", "reptile"];
+const breeds = [];
 //If we put an input inside breeds the disabled tag on the breeds label will add the list
 
 const SearchParams = () => {
@@ -14,22 +14,22 @@ const SearchParams = () => {
   const [location, setLocation] = useState("");
   const [animal, setAnimal] = useState("");
   const [breed, setBreed] = useState("");
-  const [breeds] = useBreedList(animal);
-  //Line below calls from the API
+  //Calls from the API
   const [pets, setPets] = useState([]);
-  //useEffect is done at the start, and uses requestPets
+  const breeds = [];
   useEffect(() => {
     requestPets();
     //below line removes a need to have any dependencies (when do I run this, never run this line again - run it once for its first render
     //) on the array on array just below this cuz if the form is detected that it changes it rerenders every time it calls for exampe "Pets"
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
-
+  //useEffect is done at the start, and uses requestPets
   async function requestPets() {
     const res = await fetch(
       `http://pets-v2.dev-apis.com/pets?animal=${animal}&location=${location}&breed=${breed}`
     );
     const json = await res.json();
+
     setPets(json.pets);
   }
   return (
@@ -44,7 +44,6 @@ const SearchParams = () => {
       >
         <label htmlFor="location">
           Location
-          {/* OnChange is used so that when the user changes values inside the input, the object changes on both the screen and js */}
           <input
             onChange={(e) => setLocation(e.target.value)}
             id="location"
@@ -54,10 +53,8 @@ const SearchParams = () => {
         </label>
         <label htmlFor="animal">
           Animal
-          {/* Changes animal type depending on the option you put in */}
           <select
             id="animal"
-            // Remember Value is the one on the front-end
             value={animal}
             onChange={(e) => {
               setAnimal(e.target.value);
@@ -65,7 +62,6 @@ const SearchParams = () => {
             }}
           >
             <option />
-            {/* Changes the breed based on the animal type */}
             {ANIMALS.map((breed) => (
               <option key={breed}>{breed}</option>
             ))}
@@ -76,7 +72,6 @@ const SearchParams = () => {
           <select
             name=""
             id="breed"
-            // Disables the select option if there are no breeds
             disabled={breeds.length === 0}
             value={breed}
             onChange={(e) => {
@@ -92,7 +87,14 @@ const SearchParams = () => {
         </label>
         <button>Submit</button>
       </form>
-      <Results pets={pets}></Results>
+      {pets.map((pet) => (
+        <Pet
+          name={pet.name}
+          animal={pet.animal}
+          breed={pet.breed}
+          key={pet.id}
+        />
+      ))}
     </div>
   );
   //pet.id it can have a handle of switching the order of the array
