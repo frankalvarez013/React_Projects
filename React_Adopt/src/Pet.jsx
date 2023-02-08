@@ -11,13 +11,15 @@
 //These lines above and below are the exact same.
 //------------------
 
+import { Link } from "react-router-dom";
+//We use the link so that it doesn't refresh the page and allows us to go fasster than just using an "a tag"
 const Pet = (prop) => {
   let hero = "http://pets-images.dev-apis.com/pets/none.jpg";
   if (prop.images.length) {
     hero = prop.images[0];
   }
   return (
-    <a href={`/details/${prop.id}`} className="pet">
+    <Link to={`/details/${prop.id}`} className="pet">
       <div className="image-container">
         <img src={hero} alt={prop.name} />
       </div>
@@ -27,7 +29,7 @@ const Pet = (prop) => {
           {prop.animal} - {prop.breed} - {prop.location}
         </h2>
       </div>
-    </a>
+    </Link>
   );
 };
 //default is how modules "work"
